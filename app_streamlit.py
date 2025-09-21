@@ -153,14 +153,41 @@ def main():
         /* Cards/expanders neutral background */
         .stExpander, .stMarkdown { background-color: #FFFFFF !important; }
         /* Primary button color with black text (purple) */
-        .stButton>button {
+        .stButton>button,
+        button[kind="primary"],
+        div[data-testid="stFormSubmitButton"] button,
+        div[data-testid="baseButton-primary"] {
             background-color: #7C3AED !important; /* purple */
-            color: #000000 !important;
-            border: 0 !important;
+            background-image: none !important;
+            border: 1px solid #7C3AED !important;
+            color: #000000 !important; /* keep text black as requested */
+            box-shadow: none !important;
         }
-        .stButton>button:hover {
+        .stButton>button:hover,
+        button[kind="primary"]:hover,
+        div[data-testid="stFormSubmitButton"] button:hover,
+        div[data-testid="baseButton-primary"]:hover,
+        .stButton>button:focus,
+        button[kind="primary"]:focus,
+        div[data-testid="stFormSubmitButton"] button:focus,
+        div[data-testid="baseButton-primary"]:focus,
+        .stButton>button:active,
+        button[kind="primary"]:active,
+        div[data-testid="stFormSubmitButton"] button:active,
+        div[data-testid="baseButton-primary"]:active {
             background-color: #6D28D9 !important;
+            border-color: #6D28D9 !important;
             color: #000000 !important;
+            box-shadow: none !important;
+        }
+
+        /* Sidebar image: auto-fill width */
+        section[data-testid="stSidebar"] img {
+            width: 100% !important;
+            max-width: 100% !important;
+            height: auto !important;
+            display: block !important;
+            object-fit: contain !important; /* change to cover if you prefer crop */
         }
         </style>
         """,
