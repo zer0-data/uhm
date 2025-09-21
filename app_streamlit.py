@@ -125,7 +125,7 @@ def _sort_rows_desc(rows: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
 
 
 def main():
-    st.set_page_config(page_title="A Penny for Your Thoughts", layout="centered")
+    st.set_page_config(page_title="Jeremiahpaglu", layout="centered")
 
     # Inject custom CSS for light pink background and gentle accents
     st.markdown(
@@ -194,7 +194,7 @@ def main():
         unsafe_allow_html=True,
     )
 
-    st.title("A Penny for Your Thoughts")
+    st.title("Why Bhakti hates me 😭😭")
 
     api_url = _load_api_url()
     if not api_url:
@@ -213,7 +213,7 @@ def main():
 
     # Submission form
     with st.form("submit_form", clear_on_submit=True):
-        thought = st.text_area("What's on your mind?", height=140, placeholder="Type your thought here…")
+        thought = st.text_area("why is me worst?🥺", height=140, placeholder="Pasand bhi hoon mai tujhe😭")
         submitted = st.form_submit_button("Submit Thought")
         if submitted:
             if not thought.strip():
@@ -230,7 +230,7 @@ def main():
 
     # History
     st.markdown("---")
-    st.subheader("Submission History")
+    st.subheader("Do you even love me?🥺")
     refresh = st.button("Refresh 🔄")
     if refresh:
         st.rerun()
@@ -244,7 +244,7 @@ def main():
     rows = _sort_rows_desc(rows)
 
     if not rows:
-        st.info("No submissions yet. Be the first to share a thought!")
+        st.info("Nothing to complain about huh, I love u ❤️")
     else:
         for row in rows:
             ts = str(row.get("Timestamp") or "").strip()
