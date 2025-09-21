@@ -189,6 +189,42 @@ def main():
             display: block !important;
             object-fit: contain !important; /* change to cover if you prefer crop */
         }
+
+        /* Sidebar buttons: same color as background (light pink) */
+        section[data-testid="stSidebar"] .stButton>button,
+        section[data-testid="stSidebar"] button[kind="primary"],
+        section[data-testid="stSidebar"] div[data-testid="stFormSubmitButton"] button,
+        section[data-testid="stSidebar"] div[data-testid="baseButton-primary"],
+        section[data-testid="stSidebar"] div[data-testid="baseButton-secondary"],
+        section[data-testid="stSidebar"] button {
+            background-color: #FFEFF4 !important;
+            border: 1px solid #FFEFF4 !important;
+            color: #000000 !important;
+            box-shadow: none !important;
+        }
+        section[data-testid="stSidebar"] .stButton>button:hover,
+        section[data-testid="stSidebar"] button[kind="primary"]:hover,
+        section[data-testid="stSidebar"] div[data-testid="stFormSubmitButton"] button:hover,
+        section[data-testid="stSidebar"] div[data-testid="baseButton-primary"]:hover,
+        section[data-testid="stSidebar"] div[data-testid="baseButton-secondary"]:hover,
+        section[data-testid="stSidebar"] button:hover,
+        section[data-testid="stSidebar"] .stButton>button:focus,
+        section[data-testid="stSidebar"] button[kind="primary"]:focus,
+        section[data-testid="stSidebar"] div[data-testid="stFormSubmitButton"] button:focus,
+        section[data-testid="stSidebar"] div[data-testid="baseButton-primary"]:focus,
+        section[data-testid="stSidebar"] div[data-testid="baseButton-secondary"]:focus,
+        section[data-testid="stSidebar"] button:focus,
+        section[data-testid="stSidebar"] .stButton>button:active,
+        section[data-testid="stSidebar"] button[kind="primary"]:active,
+        section[data-testid="stSidebar"] div[data-testid="stFormSubmitButton"] button:active,
+        section[data-testid="stSidebar"] div[data-testid="baseButton-primary"]:active,
+        section[data-testid="stSidebar"] div[data-testid="baseButton-secondary"]:active,
+        section[data-testid="stSidebar"] button:active {
+            background-color: #FFEFF4 !important; /* keep same as bg */
+            border-color: #FFEFF4 !important;
+            color: #000000 !important;
+            box-shadow: none !important;
+        }
         </style>
         """,
         unsafe_allow_html=True,
