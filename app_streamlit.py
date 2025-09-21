@@ -2,7 +2,7 @@ import json
 import os
 import sys
 from datetime import datetime
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
 
 import requests
 import streamlit as st
@@ -28,6 +28,58 @@ def _load_api_url() -> str:
         except Exception:
             pass
     return ""
+
+
+def _load_images_cfg() -> Dict[str, Optional[str]]:
+    """Load optional image paths/URLs from env or config.json.
+
+    Keys: HEADER_IMAGE, SIDEBAR_IMAGE, FOOTER_IMAGE
+    Values can be local file paths or URLs. Missing entries become None.
+    """
+    keys = ["HEADER_IMAGE", "SIDEBAR_IMAGE", "FOOTER_IMAGE"]
+    result: Dict[str, Optional[str]] = {k: None for k in keys}
+
+    # Env first
+    for k in keys:
+        v = os.environ.get(k)
+        if v:
+            result[k] = v
+
+    # Config fallback
+    if getattr(sys, "frozen", False):
+        base_dir = os.path.dirname(sys.executable)
+    else:
+        base_dir = os.path.dirname(os.path.abspath(__file__))
+    cfg_path = os.path.join(base_dir, "config.json")
+    if os.path.exists(cfg_path):
+        try:
+            with open(cfg_path, "r", encoding="utf-8") as f:
+                cfg = json.load(f)
+            for k in keys:
+                if not result[k]:
+                    val = cfg.get(k)
+                    if isinstance(val, str) and val.strip():
+                        result[k] = val.strip()
+        except Exception:
+            pass
+
+    # Default files from ./images if still not provided
+    images_dir = os.path.join(base_dir, "images")
+    if os.path.isdir(images_dir):
+        candidates = {
+            "HEADER_IMAGE": ["header.png", "header.jpg", "header.jpeg", "header.webp"],
+            "SIDEBAR_IMAGE": ["sidebar.png", "sidebar.jpg", "sidebar.jpeg", "sidebar.webp"],
+            "FOOTER_IMAGE": ["footer.png", "footer.jpg", "footer.jpeg", "footer.webp"],
+        }
+        for key, names in candidates.items():
+            if result.get(key):
+                continue
+            for name in names:
+                p = os.path.join(images_dir, name)
+                if os.path.isfile(p):
+                    result[key] = p
+                    break
+    return result
 
 
 # --- API functions (kept same interface as tkinter app logic) ---
@@ -63,12 +115,44 @@ def _sort_rows_desc(rows: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
 
 def main():
     st.set_page_config(page_title="A Penny for Your Thoughts", layout="centered")
+
+    # Inject custom CSS for light pink background and gentle accents
+    st.markdown(
+        """
+        <style>
+        /* Page background */
+        .stApp {
+            background-color: #FFEFF4; /* light pink */
+        }
+        /* Cards/expanders neutral background */
+        .stExpander, .stMarkdown, .stTextArea textarea {
+            background-color: #FFFFFF !important;
+        }
+        /* Primary button color */
+        .stButton>button {
+            background-color: #E91E63 !important; /* pink accent */
+            color: #ffffff !important;
+            border: 0 !important;
+        }
+        .stButton>button:hover {
+            background-color: #D81B60 !important;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True,
+    )
+
     st.title("A Penny for Your Thoughts")
 
     api_url = _load_api_url()
     if not api_url:
         st.error("Missing API URL. Set SHEET_API_URL or provide config.json with SHEET_API_URL.")
         st.stop()
+
+    # Optional images (header/sidebar/footer)
+    images_cfg = _load_images_cfg()
+    if images_cfg.get("HEADER_IMAGE"):
+        st.image(images_cfg["HEADER_IMAGE"], use_container_width=True)
 
     # Submission form
     with st.form("submit_form", clear_on_submit=True):
@@ -105,6 +189,11 @@ def main():
     if not rows:
         st.info("No submissions yet. Be the first to share a thought!")
     else:
+        # Sidebar image (optional), shown once above expanders if present
+        if images_cfg.get("SIDEBAR_IMAGE"):
+            with st.sidebar:
+                st.image(images_cfg["SIDEBAR_IMAGE"], use_container_width=True)
+
         for row in rows:
             ts = str(row.get("Timestamp") or "").strip()
             status = str(row.get("Status") or "").strip()
@@ -119,6 +208,11 @@ def main():
 
             with st.expander(title, expanded=False):
                 st.write(grievance if grievance else "(No text)")
+
+    # Footer image (optional)
+    if images_cfg.get("FOOTER_IMAGE"):
+        st.markdown("\n---\n")
+        st.image(images_cfg["FOOTER_IMAGE"], use_container_width=True)
 
 
 if __name__ == "__main__":

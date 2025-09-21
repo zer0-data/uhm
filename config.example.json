@@ -1,3 +1,6 @@
 {
-  "SHEET_API_URL": "https://sheet.best/api/sheets/your-sheet-id-here"
+  "SHEET_API_URL": "https://sheet.best/api/sheets/your-sheet-id-here",
+  "HEADER_IMAGE": "path-or-url-to-header-image.png",
+  "SIDEBAR_IMAGE": "path-or-url-to-sidebar-image.png",
+  "FOOTER_IMAGE": "path-or-url-to-footer-image.png"
 }
