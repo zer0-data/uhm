@@ -124,18 +124,28 @@ def main():
         .stApp {
             background-color: #FFEFF4; /* light pink */
         }
-        /* Cards/expanders neutral background */
-        .stExpander, .stMarkdown, .stTextArea textarea {
-            background-color: #FFFFFF !important;
+        /* Make ALL text black by default */
+        html, body, .stApp, .stMarkdown, .stText, .stWrite, .st-emotion-cache, .stExpander, 
+        h1, h2, h3, h4, h5, h6, p, label, span, div, code, pre, li, summary,
+        section[data-testid="stSidebar"], section[data-testid="stSidebar"] * {
+            color: #000000 !important;
         }
-        /* Primary button color */
+        /* Links also black */
+        a, a:visited, a:hover, a:active { color: #000000 !important; }
+        /* Text area bg stays white and placeholder text black */
+        .stTextArea textarea { background-color: #FFFFFF !important; }
+        .stTextArea textarea::placeholder { color: #000000 !important; }
+        /* Cards/expanders neutral background */
+        .stExpander, .stMarkdown { background-color: #FFFFFF !important; }
+        /* Primary button color with black text */
         .stButton>button {
             background-color: #E91E63 !important; /* pink accent */
-            color: #ffffff !important;
+            color: #000000 !important;
             border: 0 !important;
         }
         .stButton>button:hover {
             background-color: #D81B60 !important;
+            color: #000000 !important;
         }
         </style>
         """,
