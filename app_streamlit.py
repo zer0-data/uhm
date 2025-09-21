@@ -63,6 +63,17 @@ def _load_images_cfg() -> Dict[str, Optional[str]]:
         except Exception:
             pass
 
+    # Normalize relative paths from env/config to absolute if files exist
+    def _is_url(s: str) -> bool:
+        return s.startswith("http://") or s.startswith("https://")
+
+    for k, v in list(result.items()):
+        if not v or _is_url(v) or os.path.isabs(v):
+            continue
+        candidate = os.path.join(base_dir, v)
+        if os.path.isfile(candidate):
+            result[k] = candidate
+
     # Default files from ./images if still not provided
     images_dir = os.path.join(base_dir, "images")
     if os.path.isdir(images_dir):
@@ -132,19 +143,23 @@ def main():
         }
         /* Links also black */
         a, a:visited, a:hover, a:active { color: #000000 !important; }
-        /* Text area bg stays white and placeholder text black */
-        .stTextArea textarea { background-color: #FFFFFF !important; }
+        /* Text area text & placeholder black; bg white */
+        .stTextArea textarea {
+            background-color: #FFFFFF !important;
+            color: #000000 !important;
+            caret-color: #000000 !important;
+        }
         .stTextArea textarea::placeholder { color: #000000 !important; }
         /* Cards/expanders neutral background */
         .stExpander, .stMarkdown { background-color: #FFFFFF !important; }
-        /* Primary button color with black text */
+        /* Primary button color with black text (purple) */
         .stButton>button {
-            background-color: #E91E63 !important; /* pink accent */
+            background-color: #7C3AED !important; /* purple */
             color: #000000 !important;
             border: 0 !important;
         }
         .stButton>button:hover {
-            background-color: #D81B60 !important;
+            background-color: #6D28D9 !important;
             color: #000000 !important;
         }
         </style>
@@ -163,6 +178,11 @@ def main():
     images_cfg = _load_images_cfg()
     if images_cfg.get("HEADER_IMAGE"):
         st.image(images_cfg["HEADER_IMAGE"], use_container_width=True)
+
+    # Sidebar image (optional) - always render if present
+    if images_cfg.get("SIDEBAR_IMAGE"):
+        with st.sidebar:
+            st.image(images_cfg["SIDEBAR_IMAGE"], use_container_width=True)
 
     # Submission form
     with st.form("submit_form", clear_on_submit=True):
@@ -199,11 +219,6 @@ def main():
     if not rows:
         st.info("No submissions yet. Be the first to share a thought!")
     else:
-        # Sidebar image (optional), shown once above expanders if present
-        if images_cfg.get("SIDEBAR_IMAGE"):
-            with st.sidebar:
-                st.image(images_cfg["SIDEBAR_IMAGE"], use_container_width=True)
-
         for row in rows:
             ts = str(row.get("Timestamp") or "").strip()
             status = str(row.get("Status") or "").strip()
